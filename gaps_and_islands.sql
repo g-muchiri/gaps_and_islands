@@ -67,9 +67,11 @@ alter table gaps_and_islands
 alter column end_date type date
 using end_date:: date;
 
---Clean department data
+--Check department data
+select distinct department from gaps_and_islands;
+--Confirmed, the data is clean
 
+--Check employee_status
+select distinct employee_status from gaps_and_islands;
+-- confirmed the employee status is okey
 
-
-
-select  * from gaps_and_islands;
