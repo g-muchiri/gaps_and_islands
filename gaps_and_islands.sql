@@ -1,0 +1,75 @@
+create schema if not exists gaps_islands;
+
+set search_path to gaps_islands;
+
+--alter table gaps_and_islands_data  rename to  gaps_and_islands;
+
+select * from gaps_and_islands;
+
+alter table gaps_and_islands 
+add constraint primarizing primary key (employee_id);
+
+alter table gaps_and_islands 
+add column new_date varchar(100);
+
+/*
+ * cleaning the date is not a one size fits all type of math
+ * Loong below, one has to understand the formats in which the date sit
+ * so as to know how to clean them
+ * */
+
+update gaps_and_islands
+set new_date =
+case
+	--when start_date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then to_date(start_date, 'YYYY-MM-DD')
+	--when start_date ~ '^[0-9]{4}/[0-9]{2}/[0-9]{2}$' then to_date(start_date, 'YYYY/MM/DD')
+	when start_date ~ '^[0-9]{1}/(1[3-9]|[2][0-9]|[3][0-1])/[0-9]{4}$' then to_date(start_date, 'MM-DD-YYYY')
+	when start_date ~ '^[0-9]{2}/(1[3-9]|[2][0-9]|[3][0-1])/[0-9]{4}$' then to_date(start_date, 'MM/DD/YYYY')
+	when start_date ~ '^[0-9]{1}/[0-9]{1}/[0-9]{4}$' then to_date(start_date, 'MM/DD/YYYY')
+	when start_date ~ '^[0-9]{1}/[0-9]{2}/[0-9]{4}$' then to_date(start_date, 'MM/DD/YYYY')
+	when start_date ~ '^[0-9]{2}/[0-9]{1}/[0-9]{4}$' then to_date(start_date, 'MM/DD/YYYY')
+	when start_date ~ '^[0-9]{2}/[0-9]{2}/[0-9]{4}$' then to_date(start_date, 'MM/DD/YYYY')
+	--when start_date ~ '^[0-9]{2}-[0-9]{2}-[0-9]{4}$' then to_date(start_date, 'DD-MM-YYYY')
+	--when start_date ~ '^[0-9]{2}-[0-9]{2}-[0-9]{2}$' then to_date(start_date, 'DD-MM-YY')
+	else null
+end;
+
+update gaps_and_islands 
+set start_date = new_date;
+
+alter table gaps_and_islands 
+alter column start_date type date
+using start_date::date;
+
+update gaps_and_islands
+set new_date =
+case
+	--when start_date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then to_date(start_date, 'YYYY-MM-DD')
+	--when start_date ~ '^[0-9]{4}/[0-9]{2}/[0-9]{2}$' then to_date(start_date, 'YYYY/MM/DD')
+	when end_date ~ '^[0-9]{1}/(1[3-9]|[2][0-9]|[3][0-1])/[0-9]{4}$' then to_date(end_date, 'MM-DD-YYYY')
+	when end_date ~ '^[0-9]{2}/(1[3-9]|[2][0-9]|[3][0-1])/[0-9]{4}$' then to_date(end_date, 'MM/DD/YYYY')
+	when end_date ~ '^[0-9]{1}/[0-9]{1}/[0-9]{4}$' then to_date(end_date, 'MM/DD/YYYY')
+	when end_date ~ '^[0-9]{1}/[0-9]{2}/[0-9]{4}$' then to_date(end_date, 'MM/DD/YYYY')
+	when end_date ~ '^[0-9]{2}/[0-9]{1}/[0-9]{4}$' then to_date(end_date, 'MM/DD/YYYY')
+	when end_date ~ '^[0-9]{2}/[0-9]{2}/[0-9]{4}$' then to_date(end_date, 'MM/DD/YYYY')
+	--when start_date ~ '^[0-9]{2}-[0-9]{2}-[0-9]{4}$' then to_date(start_date, 'DD-MM-YYYY')
+	--when start_date ~ '^[0-9]{2}-[0-9]{2}-[0-9]{2}$' then to_date(start_date, 'DD-MM-YY')
+	else null
+end;
+
+update gaps_and_islands
+set end_date = new_date;
+
+alter table gaps_and_islands 
+drop column new_date;
+
+alter table gaps_and_islands 
+alter column end_date type date
+using end_date:: date;
+
+--Clean department data
+
+
+
+
+select  * from gaps_and_islands;
