@@ -75,3 +75,23 @@ select distinct department from gaps_and_islands;
 select distinct employee_status from gaps_and_islands;
 -- confirmed the employee status is okey
 
+/* After data cleaning, we proceed to chec for integrity issues
+ * 
+ * 1. Do we have an employee who is working in two places concurrently?
+ * 2. Do we have end dates older than starting dates?
+ * 
+ */
+
+--Do we have an employee workingin 2 places concurrenly,
+--This was ruled out by primary key since there are no duplicates in employee_id
+
+--lets see if there are starting dates older than end dates
+
+select * from gaps_and_islands where end_date >start_date;
+
+-- delete those rows
+delete from gaps_and_islands 
+where end_date < start_date;
+
+--our data now makes sense
+
