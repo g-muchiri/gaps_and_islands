@@ -65,6 +65,13 @@ from anchored
 group by client_id, anchor 
 order by client_id ;
 
+/*
+ * To explain logically, we count the anchors because,
+ * if the dates add by one meanig a consecutive day login,
+ * the anchor remains the same, so if we count the anchors, it counts tha entry as two
+ * hence the streak
+ * */
+
 
 
 
